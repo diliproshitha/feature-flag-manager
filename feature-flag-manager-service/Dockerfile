@@ -1,9 +1,3 @@
-#FROM amazoncorretto:17-alpine-jdk
-#VOLUME ./data/service
-#RUN mvn clean install
-#COPY target/*.jar app.jar
-#ENTRYPOINT ["java","-jar","/app.jar"]
-
 #
 # Build stage
 #
