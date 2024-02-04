@@ -17,7 +17,7 @@ import com.dilip.platform.featureflagmanagerservice.constant.EndPoints;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryRequestDto;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryResponseDto;
-import com.dilip.platform.featureflagmanagerservice.service.FeatureToggleService;
+import com.dilip.platform.featureflagmanagerservice.service.impl.FeatureToggleServiceImpl;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(EndPoints.FEATURE_TOGGLE)
 public class FeatureToggleController {
 
-  private final FeatureToggleService featureToggleService;
+  private final FeatureToggleServiceImpl featureToggleService;
 
   @GetMapping("/byId/{id}")
   public ResponseEntity<FeatureToggleDto> byId(@PathVariable final UUID id) {
@@ -42,7 +42,7 @@ public class FeatureToggleController {
   }
 
   @PutMapping
-  public ResponseEntity<FeatureToggleDto> update(@RequestBody @Valid FeatureToggleDto featureToggleDto) {
+  public ResponseEntity<FeatureToggleDto> update(@RequestBody @Valid final FeatureToggleDto featureToggleDto) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(featureToggleService.update(featureToggleDto));
   }

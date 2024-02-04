@@ -1,15 +1,10 @@
 package com.dilip.platform.featureflagmanagerservice.mapper;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.stereotype.Component;
 
 import com.dilip.platform.featureflagmanagerservice.entity.Audit;
 import com.dilip.platform.featureflagmanagerservice.entity.FeatureToggle;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
-import com.dilip.platform.featureflagmanagerservice.model.embeddable.FeatureToggleSummary;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +12,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeatureToggleMapper {
 
+  /**
+   * Maps FeatureToggleDto to a given FeatureToggle entity
+   * updates the given entity rather than creating a new entity to support update operations
+   * @param dto
+   * @param entity
+   * @return
+   */
   public FeatureToggle toEntity(final FeatureToggleDto dto, final FeatureToggle entity) {
     entity.setDisplayName(dto.getDisplayName());
     entity.setTechnicalName(dto.getTechnicalName());
@@ -27,7 +29,12 @@ public class FeatureToggleMapper {
     return entity;
   }
 
-  public FeatureToggleDto toDto(FeatureToggle entity) {
+  /**
+   * Maps FeatureToggle entity into FeatureToggleDto
+   * @param entity
+   * @return
+   */
+  public FeatureToggleDto toDto(final FeatureToggle entity) {
     final FeatureToggleDto dto = new FeatureToggleDto();
     dto.setId(entity.getIdAsUuid());
     dto.setDisplayName(entity.getDisplayName());
@@ -40,36 +47,5 @@ public class FeatureToggleMapper {
     dto.setModifiedAt(entity.getModifiedAt());
     dto.setCustomerIds(entity.getCustomers().stream().map(Audit::getId).toList());
     return dto;
-  }
-
-  public List<FeatureToggleDto> toDtoList(final List<FeatureToggle> entities) {
-    return entities.stream()
-        .map(this::toDto)
-        .toList();
-  }
-
-  public List<FeatureToggleSummary> toSummaryList(final List<FeatureToggle> entities,
-      final UUID customerId) {
-    return entities.stream()
-        .map(entity -> toSummary(entity, customerId))
-        .toList();
-  }
-
-  private FeatureToggleSummary toSummary(final FeatureToggle entity, final UUID customerId) {
-    return FeatureToggleSummary.builder()
-        .name(entity.getTechnicalName())
-        .active(isFeatureActive(entity, customerId))
-        .inverted(entity.isInverted())
-        .expired(isFeatureExpired(entity.getExpiresOn()))
-        .build();
-  }
-
-  private boolean isFeatureExpired(final Instant expiresOn) {
-    return Instant.now().compareTo(expiresOn) >= 0;
-  }
-
-  // TODO - implement
-  private boolean isFeatureActive(final FeatureToggle featureToggle, final UUID customerId) {
-    return true;
   }
 }
