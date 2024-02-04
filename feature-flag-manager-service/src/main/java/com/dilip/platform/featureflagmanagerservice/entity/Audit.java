@@ -1,17 +1,19 @@
 package com.dilip.platform.featureflagmanagerservice.entity;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
-import lombok.Setter;
 
 @MappedSuperclass
 @Getter
@@ -22,10 +24,17 @@ public class Audit {
   private UUID id;
 
   @CreatedDate
-  @Setter
   private Instant createdAt;
 
   @LastModifiedDate
-  @Setter
   private Instant modifiedAt;
+
+  public String getId() {
+    return Objects.nonNull(id) ? id.toString() : null;
+  }
+
+  @JsonIgnore
+  public UUID getIdAsUuid() {
+    return id;
+  }
 }

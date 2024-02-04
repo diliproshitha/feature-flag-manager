@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,7 +20,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 public class Customer extends Audit {
+
+  @NotBlank(message = "First name is mandatory")
   private String firstName;
+
+  @NotBlank(message = "Last name is mandatory")
   private String lastName;
 
   @ManyToMany(fetch = FetchType.LAZY,

@@ -2,6 +2,7 @@ package com.dilip.platform.featureflagmanagerservice.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.dilip.platform.featureflagmanagerservice.entity.Audit;
 import com.dilip.platform.featureflagmanagerservice.entity.FeatureToggle;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
 
@@ -11,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FeatureToggleMapper {
 
-  private final AuditMapper auditMapper;
-
-  public FeatureToggle toEntity(final FeatureToggleDto dto) {
-    final FeatureToggle entity = new FeatureToggle();
+  public FeatureToggle toEntity(final FeatureToggleDto dto, final FeatureToggle entity) {
     entity.setDisplayName(dto.getDisplayName());
     entity.setTechnicalName(dto.getTechnicalName());
     entity.setExpiresOn(dto.getExpiresOn());
@@ -24,9 +22,8 @@ public class FeatureToggleMapper {
     return entity;
   }
 
-  public FeatureToggleDto toDto(FeatureToggle entity) {
-    final FeatureToggleDto dto = new FeatureToggleDto();
-    dto.setId(entity.getId());
+  public FeatureToggleDto toDto(FeatureToggle entity, final FeatureToggleDto dto) {
+    dto.setId(entity.getIdAsUuid());
     dto.setDisplayName(entity.getDisplayName());
     dto.setTechnicalName(entity.getTechnicalName());
     dto.setExpiresOn(entity.getExpiresOn());
@@ -35,7 +32,7 @@ public class FeatureToggleMapper {
     dto.setStatus(entity.getStatus());
     dto.setCreatedAt(entity.getCreatedAt());
     dto.setModifiedAt(entity.getModifiedAt());
-    dto.setCustomerIds(auditMapper.idsToStringList(entity.getCustomers().stream().toList()));
+    dto.setCustomerIds(entity.getCustomers().stream().map(Audit::getId).toList());
     return dto;
   }
 }

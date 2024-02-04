@@ -14,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,17 +27,17 @@ public class FeatureToggle extends Audit {
 
   private String displayName;
 
-  @NotNull
+  @NotBlank(message = "Technical name is mandatory")
   private String technicalName;
 
   private Instant expiresOn;
 
   private String description;
 
-  @NotNull
+  @NotNull(message = "Inverted is mandatory")
   private boolean inverted;
 
-  @NotNull
+  @NotNull(message = "Status is mandatory")
   private ToggleStatus status;
 
   @ManyToMany(fetch = FetchType.LAZY,
