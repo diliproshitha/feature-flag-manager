@@ -1,6 +1,6 @@
 package com.dilip.platform.featureflagmanagerservice.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -31,5 +32,6 @@ public class Customer extends Audit {
       cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
   @JoinTable(name = "CUSTOMER_FEATURE_TOGGLE_MAPPING", joinColumns = @JoinColumn(name = "customer_id"),
       inverseJoinColumns = @JoinColumn(name = "feature_id"))
-  private Set<FeatureToggle> featureToggles;
+  @ToString.Exclude
+  private List<FeatureToggle> featureToggles;
 }

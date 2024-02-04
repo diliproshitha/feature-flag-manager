@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.Getter;
 
 @Getter
-public class FeatureToggleRequestDto {
+public class FeatureToggleRequest {
   private UUID customerId;
-  private List<FeatureNameDto> features;
+  private List<FeatureName> features;
 }

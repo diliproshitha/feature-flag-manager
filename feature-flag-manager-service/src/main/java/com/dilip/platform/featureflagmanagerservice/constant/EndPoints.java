@@ -6,5 +6,5 @@ public final class EndPoints {
   }
 
   public static final String CUSTOMER = "/api/v1/customer";
-  public static final String FEATURE_TOGGLE = "/api/v1/features";
+  public static final String FEATURE_TOGGLE = "/api/v1/feature";
 }

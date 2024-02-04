@@ -1,9 +1,11 @@
 package com.dilip.platform.featureflagmanagerservice.model.embeddable;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class FeatureToggleSummaryDto {
+@Builder
+public class FeatureToggleSummary {
   private String name;
   private boolean active;
   private boolean inverted;

@@ -1,6 +1,5 @@
 package com.dilip.platform.featureflagmanagerservice.service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +13,9 @@ import com.dilip.platform.featureflagmanagerservice.exception.ResourceNotFoundEx
 import com.dilip.platform.featureflagmanagerservice.mapper.FeatureToggleMapper;
 import com.dilip.platform.featureflagmanagerservice.mapper.UuidMapper;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
+import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryRequestDto;
+import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryResponseDto;
+import com.dilip.platform.featureflagmanagerservice.model.embeddable.FeatureName;
 import com.dilip.platform.featureflagmanagerservice.repository.CustomerRepository;
 import com.dilip.platform.featureflagmanagerservice.repository.FeatureToggleRepository;
 
@@ -30,6 +32,11 @@ public class FeatureToggleService {
   private final FeatureToggleMapper featureToggleMapper;
   private final UuidMapper uuidMapper;
 
+  public FeatureToggleDto getById(final UUID id) {
+    final FeatureToggle entity = getFeatureToggleById(id);
+    return featureToggleMapper.toDto(entity);
+  }
+
   @Transactional
   public FeatureToggleDto save(final FeatureToggleDto featureToggleDto) {
     log.info("START: save feature toggle");
@@ -37,11 +44,11 @@ public class FeatureToggleService {
         .findAllById(uuidMapper.toUuidList(featureToggleDto.getCustomerIds()));
     final FeatureToggle featToggleEntity = featureToggleMapper
         .toEntity(featureToggleDto, new FeatureToggle());
-    featToggleEntity.setCustomers(new HashSet<>(customers));
+    featToggleEntity.setCustomers(customers);
     final FeatureToggle response = featureToggleRepository.save(featToggleEntity);
     log.info("Successfully saved feature toggle. id: {}", response.getId());
     log.info("END: save feature toggle");
-    return featureToggleMapper.toDto(response, new FeatureToggleDto());
+    return featureToggleMapper.toDto(response);
   }
 
   @Transactional
@@ -51,11 +58,11 @@ public class FeatureToggleService {
         .findAllById(uuidMapper.toUuidList(featureToggleDto.getCustomerIds()));
     final FeatureToggle featToggleEntity = featureToggleMapper.toEntity(featureToggleDto,
         getFeatureToggleById(featureToggleDto.getIdAsUuid()));
-    featToggleEntity.setCustomers(new HashSet<>(customers));
+    featToggleEntity.setCustomers(customers);
     final FeatureToggle response = featureToggleRepository.save(featToggleEntity);
     log.info("Successfully updated feature toggle. id: {}", response.getId());
     log.info("END: update feature toggle");
-    return featureToggleMapper.toDto(response, new FeatureToggleDto());
+    return featureToggleMapper.toDto(response);
   }
 
   private FeatureToggle getFeatureToggleById(final UUID id) {
@@ -73,6 +80,22 @@ public class FeatureToggleService {
     final FeatureToggle response = featureToggleRepository.save(featToggleEntity);
     log.info("Successfully archived feature toggle. id: {}", response.getId());
     log.info("END: archive feature toggle");
-    return featureToggleMapper.toDto(response, new FeatureToggleDto());
+    return featureToggleMapper.toDto(response);
+  }
+
+  public FeatureToggleSummaryResponseDto getSummaryList(
+      final FeatureToggleSummaryRequestDto requestWrapper) {
+    final UUID customerId = requestWrapper.getFeatureRequest().getCustomerId();
+    final List<String> featureNames = getFeatureNames(requestWrapper.getFeatureRequest().getFeatures());
+    final List<FeatureToggle> featureToggles = featureToggleRepository.findByTechnicalNamesIn(featureNames);
+    return FeatureToggleSummaryResponseDto.builder()
+        .features(featureToggleMapper.toSummaryList(featureToggles, customerId))
+        .build();
+  }
+
+  private List<String> getFeatureNames(final List<FeatureName> features) {
+    return features.stream()
+        .map(FeatureName::getName)
+        .toList();
   }
 }

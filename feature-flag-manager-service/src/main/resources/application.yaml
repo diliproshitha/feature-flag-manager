@@ -14,3 +14,8 @@ spring:
       ddl:
         auto: <create | create-drop | update | validate | none>
       dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
