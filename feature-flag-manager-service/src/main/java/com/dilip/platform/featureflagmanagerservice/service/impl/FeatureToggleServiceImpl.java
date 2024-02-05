@@ -95,9 +95,7 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
    */
   private FeatureToggle getFeatureToggleById(final UUID id) {
     return featureToggleRepository.findById(id)
-        .orElseThrow(
-            () ->
-                new ResourceNotFoundException("Cannot find a FeatureToggle with id: " + id));
+        .orElseThrow(() -> new ResourceNotFoundException("Cannot find a FeatureToggle with id: " + id));
   }
 
   /**
