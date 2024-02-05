@@ -3,6 +3,8 @@ package com.dilip.platform.featureflagmanagerservice.service.impl;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +45,17 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
   public FeatureToggleDto getById(final UUID id) {
     final FeatureToggle entity = getFeatureToggleById(id);
     return featureToggleMapper.toDto(entity);
+  }
+
+  /**
+   * returns a Page of FeatureToggleDto
+   * @param pageable
+   * @return Page<FeatureToggleDto>
+   */
+  @Override
+  public Page<FeatureToggleDto> getByPage(final Pageable pageable) {
+    final Page<FeatureToggle> featureTogglePage = featureToggleRepository.findAll(pageable);
+    return featureTogglePage.map(featureToggleMapper::toDto);
   }
 
   /**

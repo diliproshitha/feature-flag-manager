@@ -2,6 +2,8 @@ package com.dilip.platform.featureflagmanagerservice.controller;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,12 @@ public class FeatureToggleController {
   public ResponseEntity<FeatureToggleDto> byId(@PathVariable final UUID id) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(featureToggleService.getById(id));
+  }
+
+  @GetMapping("/byPage")
+  public ResponseEntity<Page<FeatureToggleDto>> getByPage(final Pageable pageable) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(featureToggleService.getByPage(pageable));
   }
 
   @PostMapping
