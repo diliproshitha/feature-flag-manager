@@ -14,13 +14,11 @@
 }
 
 .App-header {
-  margin: 30px;
+  margin: 30px 100px 30px 100px;
   background-color: #ffffff;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* justify-content: center; */
   font-size: calc(10px + 2vmin);
   color: rgb(75, 68, 68);
 }

@@ -1,0 +1,4 @@
+.Disabled {
+    pointer-events: none;
+    opacity: 70%;
+}
