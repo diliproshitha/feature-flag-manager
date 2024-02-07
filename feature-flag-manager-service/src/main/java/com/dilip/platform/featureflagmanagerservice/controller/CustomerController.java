@@ -21,7 +21,7 @@ public class CustomerController {
 
   private final CustomerService customerService;
 
-  @GetMapping
+  @GetMapping("/byPage")
   public ResponseEntity<Page<CustomerDto>> byPage(final Pageable pageable) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(customerService.getByPage(pageable));
