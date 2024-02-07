@@ -6,8 +6,6 @@ services:
       - "80:80"
     depends_on:
       - feature-flag-manager-service
-    environment:
-      REACT_APP_FEATURE_FLAG_MANAGER_SERVICE_URL: http://feature-flag-manager-service:8080
   feature-flag-manager-service:
     build: ./feature-flag-manager-service
     ports:
@@ -22,7 +20,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
   postgres:
     container_name: postgres
-    image: postgres:latest
+    image: postgres:16.1-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
