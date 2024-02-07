@@ -128,14 +128,14 @@ const FeatureDetail = () => {
 
     return (
         <div className="CreateFeatureWrapper">
-            <Heading as="h2" size='lg'>{isUpdateScreen ? 'Update Feature' : 'Create Feature'}</Heading>
+            <Heading margin={'0 0 20px 0'} as="h2" size='lg'>{isUpdateScreen ? 'Update Feature' : 'Create Feature'}</Heading>
             <FeatureDetails 
                 feature={feature}
                 setTechnicalNameCallback={setTechnicalNameCallback} 
                 setDisplayNameCallback={setDisplayNameCallback} 
                 setExpiresOnCallback={setExpiresOnCallback} 
                 setDescriptionCallback={setDescriptionCallback} 
-                setCustomerIdsCallback={setCustomerIdsCallback} 
+                setCustomerIdsCallback={setCustomerIdsCallback}
                 setInvertedCallback={setInvertedCallback} 
                 customers={customers} />
             <Container>
