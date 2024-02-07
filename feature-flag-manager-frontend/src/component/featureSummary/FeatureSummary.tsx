@@ -39,7 +39,7 @@ const FeatureSummary = () => {
                     <Table variant='simple'>
                         <Thead>
                             <Tr>
-                                <Th>Display Name</Th>
+                                <Th>Name</Th>
                                 <Th>Inverted</Th>
                                 <Th>Status</Th>
                                 <Th>Expired</Th>
@@ -50,7 +50,7 @@ const FeatureSummary = () => {
                             {
                                 features.map((row, index) => (
                                     <Tr key={index}>
-                                        <Td>{row.displayName}</Td>
+                                        <Td>{row.displayName || row.technicalName}</Td>
                                         <Td>{row.inverted ? 'Yes' : 'No'}</Td>
                                         <Td>{row.status}</Td>
                                         <Td>{row.expiresOn && isExpired(row.expiresOn) ? 'Yes' : 'No'}</Td>

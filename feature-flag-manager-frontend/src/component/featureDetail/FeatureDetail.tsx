@@ -16,10 +16,15 @@ const FeatureDetail = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const location = useLocation();
-    const toast = useToast()
-    const [feature, setFeature] = useState<FeatureToggle>({inverted: false, technicalName: '', status: FeatureToggleStatus.ACTIVE});
+    const toast = useToast();
+    const [feature, setFeature] = useState<FeatureToggle>(
+        {inverted: false, 
+            technicalName: '', 
+            status: FeatureToggleStatus.ACTIVE,
+            customerIds: []
+        }
+    );
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [expiryDate, setExpiryDate] = useState<string>('');
     const [isUpdateScreen, setIsUpdateScreen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -27,12 +32,6 @@ const FeatureDetail = () => {
             setCustomers(response.content);
         });
     }, []);
-
-    useEffect(() => {
-        if (feature.expiresOn) {
-            setExpiryDate(feature.expiresOn);
-        }
-    }, [feature]);
 
     useEffect(() => {
         const featureId = searchParams.get('id');
@@ -80,6 +79,31 @@ const FeatureDetail = () => {
         });
     }
 
+    const validateFeature = (feature: FeatureToggle): boolean => {
+        const isTechnicalNameValid = validateTechnicalName(feature);
+        const isExpiryDateValid = validateExpiresOn(feature);
+        return isTechnicalNameValid && isExpiryDateValid;
+    }
+    
+    const validateTechnicalName = (feature: FeatureToggle): boolean => {
+        let isValid = true;
+        if (!feature.technicalName || feature.technicalName.length === 0) {
+            isValid = false;
+            showToast('Technical Name is required', 'Please enter a technical name', 'error');
+        }
+        return isValid;
+    }
+    
+    const validateExpiresOn = (feature: FeatureToggle): boolean => {
+        let isValid = true;
+        if (!feature.expiresOn || feature.expiresOn.length === 0) {
+            isValid = false;
+            showToast('Expiry Date is required', 'Please enter a expiry date', 'error');
+        }
+        return isValid;
+    }
+    
+
     const showToast = (title: string, description: string, status: "success" | "error") => {
         toast({
             title: title,
@@ -91,7 +115,10 @@ const FeatureDetail = () => {
     }
 
     const handleUpdate = () => {
-        featureToggleService.update({...feature, expiresOn: toInstant(expiryDate)})
+        if (!validateFeature(feature)) {
+            return;
+        }
+        featureToggleService.update(feature)
         .then(() => {
             showToast("Feature Updated", "Feature has been updated successfully", "success");
             navigate("/");
@@ -103,6 +130,9 @@ const FeatureDetail = () => {
     }
 
     const handleSave = () => {
+        if (!validateFeature(feature)) {
+            return;
+        }
         featureToggleService.save(feature)
         .then(() => {
             showToast("Feature Created", "Feature has been created successfully", "success");
