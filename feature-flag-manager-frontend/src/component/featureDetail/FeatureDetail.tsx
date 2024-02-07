@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FeatureToggle, FeatureToggleStatus } from "../../model/featureToggle";
 import React from "react";
-import { Button, Container, Heading, IconButton, useToast } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Container, Heading, IconButton, useDisclosure, useToast } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import "./FeatureDetail.css";
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -26,6 +26,8 @@ const FeatureDetail = () => {
     );
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [isUpdateScreen, setIsUpdateScreen] = useState<boolean>(false);
+    const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef(null)
 
     useEffect(() => {
         customerService.byPage(0, 10).then((response) => {
@@ -156,6 +158,32 @@ const FeatureDetail = () => {
         return feature.status === FeatureToggleStatus.ARCHIVED;
     }
 
+    const handleGoBack = () => {
+        if (isFormDirty()) {
+            showGoBackWarning();
+        } else {
+            navigateToHome();
+        }
+    }
+
+    const navigateToHome = () => {
+        navigate("/");
+    }
+
+    const showGoBackWarning = () => {
+        onOpen();
+    }
+
+    const isFormDirty = () => {
+        return !isUpdateScreen
+        && (feature.technicalName 
+        || feature.displayName 
+        || feature.expiresOn 
+        || feature.description 
+        ||  feature.customerIds && feature.customerIds.length > 0 
+        || feature.inverted);
+    }
+
     return (
         <div className="CreateFeatureWrapper">
             <Heading margin={'0 0 20px 0'} as="h2" size='lg'>{isUpdateScreen ? 'Update Feature' : 'Create Feature'}</Heading>
@@ -176,7 +204,7 @@ const FeatureDetail = () => {
                         colorScheme='teal'
                         aria-label='Done'
                         fontSize='20px'
-                        onClick={() => navigate("/")}
+                        onClick={handleGoBack}
                         icon={<ArrowBackIcon />}
                     />
                     <div>
@@ -188,6 +216,31 @@ const FeatureDetail = () => {
                     
                 </div>
             </Container>
+            <AlertDialog
+                motionPreset='slideInBottom'
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+                isOpen={isOpen}
+                isCentered
+            >
+                <AlertDialogOverlay />
+
+                <AlertDialogContent>
+                <AlertDialogHeader>Discard Changes?</AlertDialogHeader>
+                <AlertDialogCloseButton />
+                <AlertDialogBody>
+                    Feature has not been saved yet. Are you sure you want to discard all of your changes?
+                </AlertDialogBody>
+                <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                    No
+                    </Button>
+                    <Button colorScheme='red' ml={3} onClick={navigateToHome}>
+                    Yes
+                    </Button>
+                </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };
