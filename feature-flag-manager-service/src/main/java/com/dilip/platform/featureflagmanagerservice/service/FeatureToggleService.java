@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
-import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryRequestDto;
-import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryResponseDto;
 
 public interface FeatureToggleService {
 
@@ -18,8 +16,6 @@ public interface FeatureToggleService {
   FeatureToggleDto update(FeatureToggleDto featureToggleDto);
 
   FeatureToggleDto archive(UUID id);
-
-  FeatureToggleSummaryResponseDto getSummaryList(FeatureToggleSummaryRequestDto requestWrapper);
 
   Page<FeatureToggleDto> getByPage(Pageable pageable);
 }

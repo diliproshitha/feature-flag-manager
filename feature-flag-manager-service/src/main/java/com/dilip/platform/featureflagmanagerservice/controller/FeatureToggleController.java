@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dilip.platform.featureflagmanagerservice.constant.EndPoints;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
-import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryRequestDto;
-import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryResponseDto;
-import com.dilip.platform.featureflagmanagerservice.service.impl.FeatureToggleServiceImpl;
+import com.dilip.platform.featureflagmanagerservice.service.FeatureToggleService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(EndPoints.FEATURE_TOGGLE)
 public class FeatureToggleController {
 
-  private final FeatureToggleServiceImpl featureToggleService;
+  private final FeatureToggleService featureToggleService;
 
   @GetMapping("/byId/{id}")
   public ResponseEntity<FeatureToggleDto> byId(@PathVariable final UUID id) {
@@ -61,10 +59,4 @@ public class FeatureToggleController {
         .body(featureToggleService.archive(id));
   }
 
-  @PostMapping("/summary")
-  public ResponseEntity<FeatureToggleSummaryResponseDto> getSummary(
-      @RequestBody final FeatureToggleSummaryRequestDto wrapperDto) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(featureToggleService.getSummaryList(wrapperDto));
-  }
 }

@@ -13,11 +13,8 @@ import com.dilip.platform.featureflagmanagerservice.entity.FeatureToggle;
 import com.dilip.platform.featureflagmanagerservice.entity.embeddable.ToggleStatus;
 import com.dilip.platform.featureflagmanagerservice.exception.ResourceNotFoundException;
 import com.dilip.platform.featureflagmanagerservice.mapper.FeatureToggleMapper;
-import com.dilip.platform.featureflagmanagerservice.mapper.FeatureToggleSummaryMapper;
 import com.dilip.platform.featureflagmanagerservice.mapper.UuidMapper;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
-import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryRequestDto;
-import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryResponseDto;
 import com.dilip.platform.featureflagmanagerservice.repository.CustomerRepository;
 import com.dilip.platform.featureflagmanagerservice.repository.FeatureToggleRepository;
 import com.dilip.platform.featureflagmanagerservice.service.FeatureToggleService;
@@ -34,7 +31,6 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
   private final CustomerRepository customerRepository;
   private final FeatureToggleMapper featureToggleMapper;
   private final UuidMapper uuidMapper;
-  private final FeatureToggleSummaryMapper summaryMapper;
 
   /**
    * returns a FeatureToggleDto for given FeatureToggle Id
@@ -126,21 +122,5 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
     log.info("Successfully archived feature toggle. id: {}", response.getId());
     log.info("END: archive feature toggle");
     return featureToggleMapper.toDto(response);
-  }
-
-  /**
-   * Returns a Feature toggle summary list for a given customer and feature toggle technicalNames
-   * @param requestWrapper
-   * @return FeatureToggleSummaryResponseDto
-   */
-  @Override
-  public FeatureToggleSummaryResponseDto getSummaryList(final FeatureToggleSummaryRequestDto requestWrapper) {
-    final UUID customerId = requestWrapper.getFeatureRequest().getCustomerId();
-    final List<String> featureNames = summaryMapper.toFeatureNameStrings(requestWrapper.getFeatureRequest()
-        .getFeatures());
-    final List<FeatureToggle> featureToggles = featureToggleRepository.findByTechnicalNamesIn(featureNames);
-    return FeatureToggleSummaryResponseDto.builder()
-        .features(summaryMapper.toSummaryList(featureToggles, customerId))
-        .build();
   }
 }
