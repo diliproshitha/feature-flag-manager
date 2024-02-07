@@ -11,9 +11,16 @@ import org.instancio.generators.Generators;
 import com.dilip.platform.featureflagmanagerservice.entity.Audit;
 import com.dilip.platform.featureflagmanagerservice.entity.Customer;
 import com.dilip.platform.featureflagmanagerservice.entity.FeatureToggle;
+import com.dilip.platform.featureflagmanagerservice.model.CustomerDto;
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleDto;
 
-public class InstancioUtil {
+public class TestDataUtil {
+
+  public static List<FeatureToggleDto> featureTogglesToDtos(final List<FeatureToggle> dtos) {
+    return dtos.stream()
+        .map(TestDataUtil::featureToggleToDto)
+        .toList();
+  }
 
   public static FeatureToggleDto featureToggleToDto(final FeatureToggle featureToggle) {
     return Instancio.of(FeatureToggleDto.class)
@@ -32,28 +39,42 @@ public class InstancioUtil {
 
   public static FeatureToggle dtoToFeatureToggle(final FeatureToggleDto dto) {
     return Instancio.of(FeatureToggle.class)
-        .set(Select.field("id"), dto.getIdAsUuid())
+        .set(Select.field(Audit.class, "id"), dto.getIdAsUuid())
         .set(Select.field("displayName"), dto.getDisplayName())
         .set(Select.field("technicalName"), dto.getTechnicalName())
         .set(Select.field("expiresOn"), dto.getExpiresOn())
         .set(Select.field("description"), dto.getDescription())
         .set(Select.field("inverted"), dto.isInverted())
         .set(Select.field("status"), dto.getStatus())
-        .set(Select.field("customerIds"), idListToCustomers(dto.getCustomerIds()))
-        .set(Select.field("createdAt"), dto.getCreatedAt())
-        .set(Select.field("modifiedAt"), dto.getModifiedAt())
+        .set(Select.field("customers"), idListToCustomers(dto.getCustomerIds()))
+        .set(Select.field(Audit.class, "createdAt"), dto.getCreatedAt())
+        .set(Select.field(Audit.class, "modifiedAt"), dto.getModifiedAt())
         .create();
   }
 
-  private static List<Customer> idListToCustomers(final List<String> ids) {
+  public static List<CustomerDto> customersToDtos(final List<Customer> customers) {
+    return customers.stream()
+        .map(TestDataUtil::customerToDto)
+        .toList();
+  }
+
+  private static CustomerDto customerToDto(final Customer customer) {
+    return Instancio.of(CustomerDto.class)
+        .set(Select.field("id"), customer.getIdAsUuid())
+        .set(Select.field("firstName"), customer.getFirstName())
+        .set(Select.field("lastName"), customer.getLastName())
+        .create();
+  }
+
+  public static List<Customer> idListToCustomers(final List<String> ids) {
     return ids.stream()
-        .map(InstancioUtil::idToCustomer)
+        .map(TestDataUtil::idToCustomer)
         .toList();
   }
 
   private static Customer idToCustomer(final String id) {
     return Instancio.of(Customer.class)
-        .set(Select.field("id"), UUID.fromString(id))
+        .set(Select.field(Audit.class, "id"), UUID.fromString(id))
         .generate(Select.field("firstName"), Generators::string)
         .generate(Select.field("lastName"), Generators::string)
         .create();
@@ -62,6 +83,18 @@ public class InstancioUtil {
   private static List<String> toStringIds(final List<? extends Audit> audits) {
     return audits.stream()
         .map(Audit::getId)
+        .toList();
+  }
+
+  public static FeatureToggleDto randomFeatureToggleDto() {
+    final FeatureToggleDto dto = Instancio.create(FeatureToggleDto.class);
+    dto.setCustomerIds(randomUuidAsStrings(2));
+    return dto;
+  }
+
+  public static List<String> randomUuidAsStrings(final int size) {
+    return Instancio.ofList(UUID.class).size(size).create().stream()
+        .map(UUID::toString)
         .toList();
   }
 
