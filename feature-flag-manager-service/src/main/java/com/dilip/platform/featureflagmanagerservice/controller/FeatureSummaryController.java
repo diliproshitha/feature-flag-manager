@@ -12,6 +12,9 @@ import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryRe
 import com.dilip.platform.featureflagmanagerservice.model.FeatureToggleSummaryResponseDto;
 import com.dilip.platform.featureflagmanagerservice.service.FeatureSummaryService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,6 +25,12 @@ public class FeatureSummaryController {
   private final FeatureSummaryService featureSummaryService;
 
   @PostMapping("/byCustomer")
+  @Operation(summary = "Get feature summaries", description = "Get feature summaries by technicalName for given customer.\n"
+      + "If customer is included in the FeatureToggle and FeatureToggle is not archived and is not expired, then it is considered as active.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Feature Toggle summaries for given customer"),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+  })
   public ResponseEntity<FeatureToggleSummaryResponseDto> byCustomer(
       @RequestBody final FeatureToggleSummaryRequestDto request) {
     return ResponseEntity.status(HttpStatus.OK)
