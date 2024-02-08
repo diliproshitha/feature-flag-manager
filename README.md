@@ -14,7 +14,6 @@
 ### Back end
  - Back end project can be found in `feature-flag-manager-backend` directory.
  - Built using Java 17 and Spring Boot 3.
- - Postgres 16.1-alpine is used as the database.
  - Flyway is used for database migration.
 
 If you are running the backend locally, then you need to set following environment variables and change them accordingly:
@@ -23,6 +22,13 @@ If you are running the backend locally, then you need to set following environme
 - POSTGRES_DB=FEATURE_FLAG_MANAGER
 - POSTGRES_USER=feature-flag-manager-user
 - POSTGRES_PASSWORD=feature-flag-manager-password
+
+### Database
+ - Postgres 16.1-alpine version is used for this project.
+ - Database can be accessed using `localhost:5432` with username `feature-flag-manager-user` and password `feature-flag-manager-password`.
+
+##### ERD:
+![ERD](erd.png)
 
 If you have any questions, please feel free to reach out to me.
 
