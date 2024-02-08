@@ -23,3 +23,7 @@ If you are running the backend locally, then you need to set following environme
 - POSTGRES_DB=FEATURE_FLAG_MANAGER
 - POSTGRES_USER=feature-flag-manager-user
 - POSTGRES_PASSWORD=feature-flag-manager-password
+
+If you have any questions, please feel free to reach out to me.
+
+#### Cheers!
