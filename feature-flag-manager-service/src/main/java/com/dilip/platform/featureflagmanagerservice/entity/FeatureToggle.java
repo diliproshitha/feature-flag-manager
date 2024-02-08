@@ -3,6 +3,8 @@ package com.dilip.platform.featureflagmanagerservice.entity;
 import java.time.Instant;
 import java.util.List;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.dilip.platform.featureflagmanagerservice.entity.embeddable.ToggleStatus;
@@ -45,6 +47,7 @@ public class FeatureToggle extends Audit {
       cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
   @JoinTable(name = "CUSTOMER_FEATURE_TOGGLE_MAPPING", joinColumns = @JoinColumn(name = "feature_id"),
       inverseJoinColumns = @JoinColumn(name = "customer_id"))
+  @Fetch(FetchMode.SUBSELECT)
   @ToString.Exclude
   private List<Customer> customers;
 }

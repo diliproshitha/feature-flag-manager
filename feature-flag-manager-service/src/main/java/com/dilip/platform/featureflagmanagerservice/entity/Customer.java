@@ -2,6 +2,8 @@ package com.dilip.platform.featureflagmanagerservice.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.CascadeType;
@@ -32,6 +34,7 @@ public class Customer extends Audit {
       cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
   @JoinTable(name = "CUSTOMER_FEATURE_TOGGLE_MAPPING", joinColumns = @JoinColumn(name = "customer_id"),
       inverseJoinColumns = @JoinColumn(name = "feature_id"))
+  @Fetch(FetchMode.SUBSELECT)
   @ToString.Exclude
   private List<FeatureToggle> featureToggles;
 }
