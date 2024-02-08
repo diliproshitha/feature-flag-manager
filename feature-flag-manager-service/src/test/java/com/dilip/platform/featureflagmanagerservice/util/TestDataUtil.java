@@ -1,8 +1,10 @@
 package com.dilip.platform.featureflagmanagerservice.util;
 
+import static org.instancio.Select.field;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import org.instancio.Instancio;
 import org.instancio.Select;
@@ -56,6 +58,34 @@ public class TestDataUtil {
     return customers.stream()
         .map(TestDataUtil::customerToDto)
         .toList();
+  }
+
+  public static List<Customer> createCustomersWithoutAudit(final int size) {
+    return IntStream.rangeClosed(1, size)
+        .mapToObj(i -> createCustomerWithoutAudit())
+        .toList();
+  }
+
+  private static Customer createCustomerWithoutAudit() {
+    return Instancio.of(Customer.class)
+        .ignore(field(Audit.class, "id"))
+        .ignore(field(Audit.class, "createdAt"))
+        .ignore(field(Audit.class, "modifiedAt"))
+        .create();
+  }
+
+  public static List<FeatureToggle> createFeatureTogglesWithoutAudit(final int size) {
+    return IntStream.rangeClosed(1, size)
+        .mapToObj(i -> createFeatureToggleWithoutAudit())
+        .toList();
+  }
+
+  private static FeatureToggle createFeatureToggleWithoutAudit() {
+    return Instancio.of(FeatureToggle.class)
+        .ignore(field(Audit.class, "id"))
+        .ignore(field(Audit.class, "createdAt"))
+        .ignore(field(Audit.class, "modifiedAt"))
+        .create();
   }
 
   private static CustomerDto customerToDto(final Customer customer) {
