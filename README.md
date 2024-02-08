@@ -8,7 +8,7 @@
 ## Details
 ### Front end
  - Front end project can be found in `feature-flag-manager-frontend` directory.
- - Build using React and Chakra UI component library.
+ - Built using React and Chakra UI component library.
  - Node version: v18.16.1 NPM version: 9.5.1
 
 ### Back end
