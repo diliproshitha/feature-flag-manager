@@ -4,7 +4,7 @@ import { Page } from "../model/page";
 
 export const featureToggleService = {
     byPage: async (page: number, size: number): Promise<Page<FeatureToggle>> => {
-        const response = await featureAxios.get(`/byPage?page=${page}&size=${size}&sort=createdAt`);
+        const response = await featureAxios.get(`/byPage?page=${page}&size=${size}&sort=createdAt,DESC`);
         return response.data;
     },
     save: async (featureToggle: FeatureToggle): Promise<FeatureToggle> => {

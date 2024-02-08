@@ -6,20 +6,25 @@ import {Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, IconButton } fr
 import "./FeatureSummary.css";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { useNavigate } from 'react-router-dom';
+import { Pagination, PaginationProps } from 'antd';
 
 const FeatureSummary = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [features, setFetures] = useState<FeatureToggle[]>([]);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [totalFeatures, setTotalFeatures] = useState(0); // TODO: use this to set the total in the pagination component
     const navigate = useNavigate();
 
     useEffect(() => {
         setIsLoading(true);
-        featureToggleService.byPage(0, 10).then((response) => {
+        featureToggleService.byPage(page - 1, pageSize).then((response) => {
             setFetures(response.content);
+            setTotalFeatures(response.totalElements);
             setIsLoading(false);
         })
-    }, []);
+    }, [page, pageSize]);
 
     const isExpired = (expiresOn: string) => {
         const expirationDate = new Date(expiresOn);
@@ -30,6 +35,10 @@ const FeatureSummary = () => {
     const handleNavigateToUpdate = (id: string) => {
         navigate(`update?id=${id}`);
     }
+
+    const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+        setPageSize(pageSize);
+      };
 
     return (
         <div className="SummaryWrapper">
@@ -68,6 +77,18 @@ const FeatureSummary = () => {
                                     </Tr>
                                 ))
                             }
+                            <Tr>
+                                <Pagination 
+                                    showQuickJumper 
+                                    showSizeChanger 
+                                    pageSize={pageSize}
+                                    onShowSizeChange={onShowSizeChange}
+                                    defaultCurrent={page} 
+                                    pageSizeOptions={['5', '10', '20', '50']}
+                                    total={totalFeatures}
+                                    onChange={setPage} 
+                                />
+                            </Tr>
                         </Tbody>
                     </Table>
                 </TableContainer>
