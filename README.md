@@ -3,7 +3,7 @@
 ## Quick Start
 <b>Step 1:</b> Install a docker version 4.X.X. [Docker Installation](https://docs.docker.com/get-docker/) \
 <b>Step 2:</b> Run command `docker-compose up` to start the application. \
-<b>Step 3:</b> Once the services are up, open the browser and navigate to `http://localhost` to access the FE app. Swagger UI can be accessed at `http://localhost:8080/swagger-ui/index.html#/` \
+<b>Step 3:</b> Once the services are up, open the browser and navigate to `http://localhost` to access the FE app. Swagger UI can be accessed at `http://localhost:8080/swagger-ui/index.html#/`
 
 ## Details
 ### Front end
