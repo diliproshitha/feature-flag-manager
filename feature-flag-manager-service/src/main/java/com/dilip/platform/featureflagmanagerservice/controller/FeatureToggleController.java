@@ -31,7 +31,7 @@ public class FeatureToggleController {
 
   @GetMapping("/byId/{id}")
   public ResponseEntity<FeatureToggleDto> byId(@PathVariable final UUID id) {
-    return ResponseEntity.status(HttpStatus.CREATED)
+    return ResponseEntity.status(HttpStatus.OK)
         .body(featureToggleService.getById(id));
   }
 
